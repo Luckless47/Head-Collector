@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://jk8vco7af22w"]
+
+[ext_resource type="Script" uid="uid://dca4ukyix28we" path="res://Scripts/Shop/shop.gd" id="1_e7rdd"]
+[ext_resource type="Texture2D" uid="uid://c0rwcc1g1d2np" path="res://Textures/Enviroment/sky.png" id="2_blqjs"]
+
+[node name="Shop" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+script = ExtResource("1_e7rdd")
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+mouse_filter = 1
+text = "Buy me!"
+icon = ExtResource("2_blqjs")
+icon_alignment = 1
+expand_icon = true
+
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
