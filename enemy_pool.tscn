@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://1a8km6ncqc77"]
+
+[ext_resource type="Script" uid="uid://blweeuaho6dbj" path="res://enemy_pool.gd" id="1_tuuks"]
+
+[node name="EnemyPool" type="Node3D"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+script = ExtResource("1_tuuks")
+
+[node name="EnemySpawnPos" type="Marker3D" parent="."]
