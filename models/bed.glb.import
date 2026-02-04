@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://e6tu3ujvye8k"
-path="res://.godot/imported/glock.glb-a17ad21501be055e1b666bbe02d8205c.scn"
+uid="uid://incappebyj68"
+path="res://.godot/imported/bed.glb-804e563a15f0b794e5595851b27a73fe.scn"
 
 [deps]
 
-source_file="res://Resources/glock.glb"
-dest_files=["res://.godot/imported/glock.glb-a17ad21501be055e1b666bbe02d8205c.scn"]
+source_file="res://models/bed.glb"
+dest_files=["res://.godot/imported/bed.glb-804e563a15f0b794e5595851b27a73fe.scn"]
 
 [params]
 

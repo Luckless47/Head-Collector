@@ -11,7 +11,8 @@ var upgrade_dict: Array = [{"Name": "Faster Firerate I", "Info": "1.0 -> 2.0", "
 							{"Name": "Faster Spawner I", "Info": "5.0 -> 4.0", "Price": 40},
 							{"Name": "Bigger Grave Radius I", "Info": "0.5 -> 1.0", "Price": 40},
 							{"Name": "Bruiser", "Info": "Get a bruiser to help you knock'em up", "Price": 130},]
-@onready var player: CharacterBody3D = $"../../Player"
+@onready var player: CharacterBody3D = $"../../SubViewportContainer/SubViewport/Player"
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

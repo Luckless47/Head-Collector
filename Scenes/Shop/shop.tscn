@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://jk8vco7af22w"]
 
-[ext_resource type="Script" uid="uid://dca4ukyix28we" path="res://Scripts/Shop/shop.gd" id="1_e7rdd"]
-[ext_resource type="Texture2D" uid="uid://c0rwcc1g1d2np" path="res://Textures/Enviroment/sky.png" id="2_blqjs"]
+[ext_resource type="Script" uid="uid://dca4ukyix28we" path="res://scripts/Shop/shop.gd" id="1_e7rdd"]
+[ext_resource type="Texture2D" uid="uid://c0rwcc1g1d2np" path="res://textures/Enviroment/sky.png" id="2_blqjs"]
 
 [node name="Shop" type="Control"]
 layout_mode = 3

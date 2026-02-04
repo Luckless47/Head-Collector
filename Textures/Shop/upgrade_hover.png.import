@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vadnh64leul1"
-path="res://.godot/imported/upgrade_hover.png-a399193c01ad0e8a1910e04cdeb92582.ctex"
+path="res://.godot/imported/upgrade_hover.png-8782ccf8393bec3cd07195f6a9bb7026.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Textures/Shop/upgrade_hover.png"
-dest_files=["res://.godot/imported/upgrade_hover.png-a399193c01ad0e8a1910e04cdeb92582.ctex"]
+source_file="res://textures/Shop/upgrade_hover.png"
+dest_files=["res://.godot/imported/upgrade_hover.png-8782ccf8393bec3cd07195f6a9bb7026.ctex"]
 
 [params]
 

@@ -1,15 +1,23 @@
 extends Node3D
 
-@onready var player: CharacterBody3D = $Player
+
 var day_length = 10
-@onready var world_environment: WorldEnvironment = $WorldEnvironment
-@onready var spot_light: SpotLight3D = $SpotLight3D
+@onready var player: CharacterBody3D = $SubViewportContainer/SubViewport/Player
+
+@onready var spot_light: SpotLight3D = $SubViewportContainer/SubViewport/SpotLight
+
 @onready var money_label: Label = $Shop/MoneyCounter/MoneyLabel
-@onready var player_money_label: Label = $Player/MoneyCounter/MoneyLabel
+
+
+@onready var player_money_label: Label = $SubViewportContainer/SubViewport/Player/MoneyCounter/MoneyLabel
 @onready var shop: Control = $Shop
-@onready var projectiles: Node3D = $Player/Camera3D/Glock/Projectiles
-@onready var enemy_pool: Node3D = $EnemyPool
-@onready var player_spawn_pos: Marker3D = $PlayerSpawnPos
+
+
+@onready var projectiles: Node3D = $SubViewportContainer/SubViewport/Player/Camera3D/Glock/Projectiles
+@onready var enemy_pool: Node3D = $SubViewportContainer/SubViewport/EnemyPool
+@onready var player_spawn_pos: Marker3D = $SubViewportContainer/SubViewport/PlayerSpawnPos
+
+
 const ENEMY_POOL = preload("uid://1a8km6ncqc77")
 
 
@@ -57,7 +65,7 @@ func day_loop():
 	
 	await get_tree().create_timer(day_length).timeout
 	player.flash_light.light_energy = 0.1
-	world_environment.environment.background_energy_multiplier = 0.0
+	#world_environment.environment.background_energy_multiplier = 0.0
 	spot_light.light_energy = 1.0
 	player.can_sleep = true
 	player.can_pickup = false
@@ -69,7 +77,7 @@ func _exit_shop():
 	player.process_mode = Node.PROCESS_MODE_ALWAYS
 	spot_light.light_energy = 0.0
 	player.flash_light.light_energy = 0.0
-	world_environment.environment.background_energy_multiplier = 1.0
+	#world_environment.environment.background_energy_multiplier = 1.0
 	player.can_sleep = false
 	shop.hide()
 	day_loop()
