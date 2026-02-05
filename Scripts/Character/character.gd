@@ -175,9 +175,11 @@ func shoot():
 		
 		can_shoot = false
 		var bullet: RigidBody3D = BULLET.instantiate()
-		projectiles.add_child(bullet)
-		bullet.global_position = bullet_spawn_pos.global_position
 		bullet.apply_central_impulse(-camera.transform.basis.z * 20.0)
+		projectiles.add_child(bullet)
+		bullet.basis = camera.basis
+		bullet.global_position = bullet_spawn_pos.global_position
+		
 		
 		animation_tree.set("parameters/TimeScale/scale", fire_rate)
 		animation_tree.set("parameters/OneShot/request", AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE)

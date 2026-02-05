@@ -15,8 +15,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+
 
 
 func set_upgrade_visuals(new_price_tag, new_upgrade_info, new_upgrade_name):

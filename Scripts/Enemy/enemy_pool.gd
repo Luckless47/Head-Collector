@@ -11,13 +11,13 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+
 
 func spawn_loop():
 	var enemy: CharacterBody3D = ENEMY.instantiate()
 	add_child(enemy)
 	if enemy:
+		enemy.scale = Vector3(0.1, 0.1, 0.1)
 		enemy.global_position = enemy_spawn_pos.global_position
 		var tween = create_tween()
 		#tween.set_parallel(true)

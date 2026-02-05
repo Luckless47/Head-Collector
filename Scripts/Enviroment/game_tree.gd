@@ -1,7 +1,7 @@
 extends Node3D
 
 
-var day_length = 10
+var day_length = 60
 @onready var player: CharacterBody3D = $SubViewportContainer/SubViewport/Player
 
 @onready var spot_light: SpotLight3D = $SubViewportContainer/SubViewport/SpotLight
@@ -29,8 +29,6 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
 
 func _enter_shop():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
