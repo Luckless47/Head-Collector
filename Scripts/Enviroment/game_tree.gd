@@ -13,7 +13,7 @@ var day_length = 60
 @onready var shop: Control = $Shop
 
 
-@onready var projectiles: Node3D = $SubViewportContainer/SubViewport/Player/Camera3D/Glock/Projectiles
+@onready var projectiles: Node3D = $SubViewportContainer/SubViewport/Player/Camera3D/Sway/Idle/Glock/Projectiles
 @onready var enemy_pool: Node3D = $SubViewportContainer/SubViewport/EnemyPool
 @onready var player_spawn_pos: Marker3D = $SubViewportContainer/SubViewport/PlayerSpawnPos
 

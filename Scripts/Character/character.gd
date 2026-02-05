@@ -5,8 +5,8 @@ const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 
 var headbob_time := 0.0
-var headbob_frequency = 2.0
-var headbob_amplitude = 0.04
+@export var headbob_frequency = 2.0
+@export var headbob_amplitude = 0.04
 
 var footstep_can_play := true
 var footstep_landed
@@ -75,7 +75,8 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed("pickup") and !pickable_obj.freeze and !picking_up:
 			picking_up = true
 			pickable_obj.gravity_scale = 0.0
-			pickable_obj.add_money.connect(_add_money)
+			if !pickable_obj.add_money.is_connected(_add_money):
+				pickable_obj.add_money.connect(_add_money)
 		
 	elif ray_cast.is_colliding() and ray_cast.get_collider().is_in_group("bed"):
 		print("sleep")
@@ -83,7 +84,12 @@ func _physics_process(delta: float) -> void:
 			sleep()
 	
 	if picking_up and pickable_obj:
-		pickable_obj.global_transform = lerp(pickable_obj.global_transform, pickup_pos.global_transform, delta * 10.0)
+		var target_pos = pickup_pos.global_position
+		var to_target = target_pos - pickable_obj.global_position
+		
+		pickable_obj.linear_velocity = to_target * 10.0
+		#pickable_obj.linear_velocity = pickable_obj.linear_velocity.clamp(
+			#Vector3(0.0, 0.0, 0.0), Vector3(5.0, 5.0, 5.0))
 	
 			
 		
@@ -123,11 +129,11 @@ var SENS = 0.003
 
 @onready var camera: Camera3D = $Camera3D
 
-@onready var animation_tree: AnimationTree = $Camera3D/Glock/AnimationTree
+@onready var animation_tree: AnimationTree = $Camera3D/Sway/Idle/Glock/AnimationTree
+@onready var projectiles: Node3D = $Camera3D/Sway/Idle/Glock/Projectiles
+@onready var bullet_spawn_pos: Marker3D = $Camera3D/Sway/Idle/Glock/BulletSpawnPos
+@onready var glock_sound: AudioStreamPlayer3D = $Camera3D/Sway/Idle/Glock/GlockSound
 
-@onready var projectiles: Node3D = $Camera3D/Glock/Projectiles
-@onready var bullet_spawn_pos: Marker3D = $Camera3D/Glock/BulletSpawnPos
-@onready var glock_sound: AudioStreamPlayer3D = $Camera3D/Glock/GlockSound
 var fire_rate = 2.0
 
 const BULLET = preload("uid://ctp0o18g7yp8p")
@@ -168,6 +174,8 @@ func _input(event: InputEvent) -> void:
 			get_tree().paused = true
 			enter_shop.emit()
 
+@onready var glock_ray_cast: RayCast3D = $Camera3D/Sway/Idle/Glock/Laser/RayCast3D
+
 
 func shoot():
 		if !attack_buffered:
@@ -175,10 +183,15 @@ func shoot():
 		
 		can_shoot = false
 		var bullet: RigidBody3D = BULLET.instantiate()
-		bullet.apply_central_impulse(-camera.transform.basis.z * 20.0)
 		projectiles.add_child(bullet)
-		bullet.basis = camera.basis
 		bullet.global_position = bullet_spawn_pos.global_position
+		bullet.global_basis = glock_ray_cast.global_basis
+		#var target_global = glock_ray_cast.to_global(glock_ray_cast.target_position)
+		#var bullet_dir = bullet.global_position.direction_to(target_global)
+		var bullet_dir = glock_ray_cast.global_transform.basis.z
+		bullet.apply_central_impulse(bullet_dir * 100.0)
+		#bullet.apply_central_impulse(-glock_ray_cast.basis.z * 20.0)
+
 		
 		
 		animation_tree.set("parameters/TimeScale/scale", fire_rate)

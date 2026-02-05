@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://r026s8ehn3im"
+path="res://.godot/imported/SillyJackGameDemo (1).mp3-52a097e1c99f35a8f068e62a44e1af58.mp3str"
+
+[deps]
+
+source_file="res://SillyJackGameDemo (1).mp3"
+dest_files=["res://.godot/imported/SillyJackGameDemo (1).mp3-52a097e1c99f35a8f068e62a44e1af58.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
