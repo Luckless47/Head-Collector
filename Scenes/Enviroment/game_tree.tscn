@@ -1,4 +1,4 @@
-[gd_scene load_steps=67 format=4 uid="uid://bj06nrcgy67ah"]
+[gd_scene load_steps=68 format=4 uid="uid://bj06nrcgy67ah"]
 
 [ext_resource type="Texture2D" uid="uid://crakmcvjy1jrl" path="res://textures/Enviroment/grass.png" id="1_bcih5"]
 [ext_resource type="Script" uid="uid://drfmo4v8sm633" path="res://scripts/Enviroment/game_tree.gd" id="1_i0w1p"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://c4sd2sjdsno56" path="res://scenes/Enviroment/sway.gd" id="6_0bhvy"]
 [ext_resource type="AudioStream" uid="uid://cxxmiv06dg6tf" path="res://sounds/Weapon/handgun-sound-effect-432110.mp3" id="7_bcih5"]
 [ext_resource type="Script" uid="uid://c4l4e3j4ojpc7" path="res://scenes/Enviroment/laser.gd" id="8_b2xvo"]
+[ext_resource type="Texture2D" uid="uid://dp33pjwvc8qdc" path="res://1fe437ed0169800342962932aca4348f.svg" id="9_akt4c"]
 [ext_resource type="Script" uid="uid://coi6o8m1wtfde" path="res://scripts/Enviroment/wall.gd" id="9_s6efi"]
 [ext_resource type="Script" uid="uid://b02r4r6wbvjoo" path="res://scripts/Shop/upgrades.gd" id="11_dqico"]
 [ext_resource type="Script" uid="uid://dx067kwvcvrn8" path="res://scripts/Shop/upgrade_info.gd" id="12_dqico"]
@@ -519,6 +520,41 @@ grow_vertical = 0
 text = "$0"
 label_settings = SubResource("LabelSettings_2tcme")
 horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="PickUpCursor" type="Control" parent="SubViewportContainer/SubViewport"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 1
+
+[node name="TextureRect" type="TextureRect" parent="SubViewportContainer/SubViewport/PickUpCursor"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -600.0
+offset_top = -600.0
+offset_right = 600.0
+offset_bottom = 600.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.009, 0.009)
+pivot_offset = Vector2(600, 600)
+texture = ExtResource("9_akt4c")
 metadata/_edit_use_anchors_ = true
 
 [node name="Enviroment" type="Node3D" parent="SubViewportContainer/SubViewport"]

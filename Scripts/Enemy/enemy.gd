@@ -14,6 +14,9 @@ var direction: Vector3 = Vector3()
 @onready var footstep_audio: AudioStreamPlayer3D = $FootstepAudio
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 
+var queued_for_delete := false
+
+@onready var body: MeshInstance3D = $Armature/Skeleton3D/Body
 
 signal spawned
 
@@ -94,4 +97,5 @@ func _simulate_impact(projectile_pos, bone):
 			
 		else:
 			head.apply_central_impulse(projectile_pos * 5.0)
+		
 		

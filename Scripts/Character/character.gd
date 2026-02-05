@@ -21,6 +21,7 @@ var can_pickup := true
 @onready var footstep_audio: AudioStreamPlayer3D = $FootstepAudio
 @onready var money_label: Label = $MoneyCounter/MoneyLabel
 @onready var flash_light: SpotLight3D = $Camera3D/FlashLight
+@onready var pick_up_cursor: Control = $"../PickUpCursor"
 
 signal enter_shop
 
@@ -72,8 +73,10 @@ func _physics_process(delta: float) -> void:
 	
 	if ray_cast.is_colliding() and ray_cast.get_collider().is_in_group("body_part") and can_pickup:
 		pickable_obj = ray_cast.get_collider()
+		pick_up_cursor.show()
 		if Input.is_action_just_pressed("pickup") and !pickable_obj.freeze and !picking_up:
 			picking_up = true
+			can_pickup = false
 			pickable_obj.gravity_scale = 0.0
 			if !pickable_obj.add_money.is_connected(_add_money):
 				pickable_obj.add_money.connect(_add_money)
@@ -83,7 +86,11 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed("pickup") and can_sleep:
 			sleep()
 	
+	else:
+		pick_up_cursor.hide()
+	
 	if picking_up and pickable_obj:
+		print("doing it")
 		var target_pos = pickup_pos.global_position
 		var to_target = target_pos - pickable_obj.global_position
 		
@@ -165,6 +172,7 @@ func _input(event: InputEvent) -> void:
 	
 	if event.is_action_pressed("pickup") and picking_up:
 		picking_up = false
+		can_pickup = true
 		pickable_obj.gravity_scale = 1.0
 		
 	if event.is_action_pressed("shop"):
