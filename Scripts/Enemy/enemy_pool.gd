@@ -6,6 +6,7 @@ const ENEMY = preload("uid://2oqfqxx5b61g")
 @onready var enemy_spawn_pos: Marker3D = $EnemySpawnPos
 var can_spawn := false
 var money_value := 2
+var player
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass
@@ -26,8 +27,14 @@ func spawn_loop():
 		#tween.tween_property(enemy, "head:scale", Vector3(1.0, 1.0, 1.0), spawn_rate)
 		await tween.finished
 		if enemy:
+			if !enemy.head.add_money.is_connected(player._add_money):
+				enemy.head.add_money.connect(player._add_money)
+				
 			enemy.spawned.emit()
 			enemy.money_value = money_value
 		await get_tree().create_timer(0.1).timeout
 	if can_spawn:
 		spawn_loop()
+
+
+	

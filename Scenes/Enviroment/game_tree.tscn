@@ -1,9 +1,10 @@
-[gd_scene load_steps=51 format=4 uid="uid://bj06nrcgy67ah"]
+[gd_scene load_steps=52 format=4 uid="uid://bj06nrcgy67ah"]
 
 [ext_resource type="Texture2D" uid="uid://crakmcvjy1jrl" path="res://textures/Enviroment/grass.png" id="1_bcih5"]
 [ext_resource type="Script" uid="uid://drfmo4v8sm633" path="res://scripts/Enviroment/game_tree.gd" id="1_i0w1p"]
 [ext_resource type="Texture2D" uid="uid://c0rwcc1g1d2np" path="res://textures/Enviroment/sky.png" id="2_rrxdr"]
 [ext_resource type="Script" uid="uid://btwv0eh3w4fcd" path="res://scripts/Enviroment/bed.gd" id="3_2tcme"]
+[ext_resource type="Script" uid="uid://b4eege43ts7iv" path="res://scenes/Enviroment/enviroment.gd" id="3_akt4c"]
 [ext_resource type="Texture2D" uid="uid://dp33pjwvc8qdc" path="res://1fe437ed0169800342962932aca4348f.svg" id="9_akt4c"]
 [ext_resource type="Script" uid="uid://coi6o8m1wtfde" path="res://scripts/Enviroment/wall.gd" id="9_s6efi"]
 [ext_resource type="Script" uid="uid://b02r4r6wbvjoo" path="res://scripts/Shop/upgrades.gd" id="11_dqico"]
@@ -27,8 +28,7 @@ uv1_scale = Vector3(12.805, 12.805, 12.805)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqico"]
 albedo_color = Color(0, 0, 0, 1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_xllb3"]
-size = Vector3(1, 0.12548828, 1)
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b2xvo"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wg18t"]
 size = Vector3(6.8253174, 1, 18.334595)
@@ -311,6 +311,7 @@ texture = ExtResource("9_akt4c")
 metadata/_edit_use_anchors_ = true
 
 [node name="Enviroment" type="Node3D" parent="SubViewportContainer/SubViewport"]
+script = ExtResource("3_akt4c")
 
 [node name="Ground" type="CSGBox3D" parent="SubViewportContainer/SubViewport/Enviroment"]
 transform = Transform3D(1.0001733, 0, 0, 0, 0.656304, 0, 0, 0, 1.0001733, 1.0656755, -4.022499, 0.18994915)
@@ -327,13 +328,13 @@ height = 13.732193
 sides = 20
 material = SubResource("StandardMaterial3D_dqico")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Enviroment/Ground/Hole"]
-collision_layer = 16
-collision_mask = 0
+[node name="AreaTrip" type="Area3D" parent="SubViewportContainer/SubViewport/Enviroment/Ground/Hole"]
+transform = Transform3D(0.9999997, 0, 0, 0, 1, 0, 0, 0, 0.9999997, 0, 6.9559755, 0)
+collision_layer = 0
+collision_mask = 4
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Enviroment/Ground/Hole/StaticBody3D"]
-transform = Transform3D(0.99999857, 0, 0, 0, 1, 0, 0, 0, 0.99999857, 0, 6.8280916, 0)
-shape = SubResource("BoxShape3D_xllb3")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SubViewportContainer/SubViewport/Enviroment/Ground/Hole/AreaTrip"]
+shape = SubResource("CapsuleShape3D_b2xvo")
 
 [node name="Roof" type="StaticBody3D" parent="SubViewportContainer/SubViewport/Enviroment"]
 transform = Transform3D(1.0001733, 0, 0, 0, 0.656304, 0, 0, 0, 1.0001733, 0.71337426, 3.9617476, 0.43198967)

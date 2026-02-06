@@ -15,6 +15,8 @@ var spawn_rate := 5
 
 @onready var shop: Control = $Shop
 
+@onready var area_trip: Area3D = $SubViewportContainer/SubViewport/Enviroment/Ground/Hole/AreaTrip
+
 var player_money_label
 var player_projectiles
 @onready var enemy_pool: Node3D = $SubViewportContainer/SubViewport/EnemyPool
@@ -85,6 +87,7 @@ func day_loop():
 	enemy_pool.money_value = money_value
 	enemy_pool.spawn_rate = spawn_rate
 	enemy_pool.can_spawn = true
+	enemy_pool.player = player
 	enemy_pool.spawn_loop()
 	
 	player.can_pickup = true

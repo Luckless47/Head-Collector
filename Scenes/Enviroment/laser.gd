@@ -16,5 +16,5 @@ func _process(delta: float) -> void:
 		scalar.scale.z = distance
 		scalar.position.z = -distance/2
 	else:
-		scalar.scale.y = ray_cast.target_position.z
+		scalar.scale.z = ray_cast.target_position.z
 		scalar.position.z = -ray_cast.target_position.z / 2

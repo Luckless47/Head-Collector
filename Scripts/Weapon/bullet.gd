@@ -12,21 +12,25 @@ var despawn := false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	lethal_loop()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _physics_process(_delta: float) -> void:
-	if linear_velocity.length() <= 1:
-		is_lethal = false
-		fireball_mesh.hide()
-		small_sparks.hide()
-	else:
-		is_lethal = true
-		fireball_mesh.show()
-		small_sparks.show()
+
+
 	
-
+func lethal_loop():
+	await get_tree().create_timer(0.5).timeout
+	while is_lethal:
+		if linear_velocity.length() <= 1:
+			is_lethal = false
+			fireball_mesh.hide()
+			small_sparks.hide()
+		else:
+			is_lethal = true
+			fireball_mesh.show()
+			small_sparks.show()
+		
+		await get_tree().physics_frame
 
 func _on_body_shape_entered(_body_rid: RID, body: Node, _body_shape_index: int, _local_shape_index: int) -> void:
 	if is_lethal:

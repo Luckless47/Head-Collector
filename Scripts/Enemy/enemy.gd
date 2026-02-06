@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+class_name Enemy
 
 const SPEED = 2.0
 const JUMP_VELOCITY = 4.5
@@ -19,22 +20,30 @@ var queued_for_delete := false
 @onready var body: MeshInstance3D = $Armature/Skeleton3D/Body
 var money_value := 2
 
+var gravity_enabled := true
+
 signal spawned
+
+signal hole_trip
 
 func _ready() -> void:
 	await spawned
 	head.set_freeze_mode(RigidBody3D.FREEZE_MODE_KINEMATIC)
 	head.add_to_group("body_part")
+	add_to_group("body_part")
 	head.money_value = money_value
 	head.simulate_impact.connect(_simulate_impact)
 	for bone in armature.physical_bone_simulator.get_children():
 		bone.simulate_impact.connect(_simulate_impact)
+		
+	hole_trip.connect(_hole_trip)
+	
 	start_walk_loop()
 
 func _physics_process(delta: float) -> void:
 	
 	# Add the gravity.
-	if not is_on_floor():
+	if not is_on_floor() and gravity_enabled:
 		velocity += get_gravity() * delta
 	
 	if can_walk:
@@ -71,6 +80,10 @@ func _physics_process(delta: float) -> void:
 	
 
 	move_and_slide()
+	
+	
+	if global_position.y < 0:
+		armature.physical_bone_simulator.physical_bones_start_simulation()
 
 func start_walk_loop():
 	can_walk = true
@@ -78,26 +91,37 @@ func start_walk_loop():
 	await get_tree().create_timer(2.0).timeout
 	can_walk = false
 	await get_tree().create_timer(2.0).timeout
+	if armature.physical_bone_simulator.is_simulating_physics():
+		return
 	start_walk_loop()
 
 
 func _simulate_impact(projectile_pos, bone):
+	if head:
+		head.freeze = false
+		head.top_level = true
+	
+	
+	await get_tree().process_frame
+	
+	#var throw_direction = projectile_pos.direction_to(head.global_position)
+	
+	
+	#collision_shape.disabled = false
+	armature.physical_bone_simulator.physical_bones_start_simulation()
+	
+	if bone:
+		bone.apply_central_impulse(projectile_pos * 5.0)
+		
+	else:
+		if head:
+			head.apply_central_impulse(projectile_pos * 5.0)
+	
+func _hole_trip():
+	if head:
 		head.freeze = false
 		head.top_level = true
 		
-		
-		await get_tree().process_frame
-		
-		#var throw_direction = projectile_pos.direction_to(head.global_position)
-		
-		
-		collision_shape.disabled = false
+	if !armature.physical_bone_simulator.is_simulating_physics():
 		armature.physical_bone_simulator.physical_bones_start_simulation()
-		
-		if bone:
-			bone.apply_central_impulse(projectile_pos * 5.0)
-			
-		else:
-			head.apply_central_impulse(projectile_pos * 5.0)
-		
 		

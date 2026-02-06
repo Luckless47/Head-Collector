@@ -11,10 +11,10 @@ var headbob_time := 0.0
 var footstep_can_play := true
 var footstep_landed
 
-var pickable_obj: RigidBody3D = null
+var pickable_obj: Variant = null
 var can_sleep := false
 
-var money = 120
+var money = 0
 
 var can_pickup := true
 
@@ -75,32 +75,31 @@ func _physics_process(delta: float) -> void:
 	footstep_landed = is_on_floor()
 	
 	
-	if ray_cast.is_colliding() and ray_cast.get_collider().is_in_group("body_part") and can_pickup:
+	if ray_cast.is_colliding():
 		pickable_obj = ray_cast.get_collider()
 		pick_up_cursor.show()
-		if Input.is_action_just_pressed("pickup") and !pickable_obj.freeze and !picking_up:
-			picking_up = true
-			can_pickup = false
-			pickable_obj.gravity_scale = 0.0
-			if !pickable_obj.add_money.is_connected(_add_money):
-				pickable_obj.add_money.connect(_add_money)
 		
-	elif ray_cast.is_colliding() and ray_cast.get_collider().is_in_group("bed"):
-		print("sleep")
-		if Input.is_action_just_pressed("pickup") and can_sleep:
-			sleep()
+		if pickable_obj is RigidBody3D:
+			rigid_pick_up()
+		
+		elif pickable_obj is PhysicalBone3D:
+			character_pick_up()
+			
+		elif pickable_obj.is_in_group("bed"):
+			if Input.is_action_just_pressed("pickup") and can_sleep:
+				sleep()
+			
+		else:
+			pick_up_cursor.hide()
+			
 	
 	else:
 		pick_up_cursor.hide()
 	
+	
 	if picking_up and pickable_obj:
-		print("doing it")
-		var target_pos = pickup_pos.global_position
-		var to_target = target_pos - pickable_obj.global_position
+		pick_up()
 		
-		pickable_obj.linear_velocity = to_target * 10.0
-		#pickable_obj.linear_velocity = pickable_obj.linear_velocity.clamp(
-			#Vector3(0.0, 0.0, 0.0), Vector3(5.0, 5.0, 5.0))
 	
 			
 		
@@ -109,6 +108,32 @@ var picking_up = false
 
 @onready var pickup_pos: Marker3D = $Camera3D/PickupPos
 #@onready var shop: Control = $"../Shop"
+
+
+func rigid_pick_up():
+	if  Input.is_action_just_pressed("pickup") and !pickable_obj.freeze and !picking_up and can_pickup:
+		picking_up = true
+		can_pickup = false
+		pickable_obj.gravity_scale = 0.0
+
+func character_pick_up():
+	if Input.is_action_just_pressed("pickup") and !picking_up and can_pickup:
+		picking_up = true
+		can_pickup = false
+		pickable_obj.gravity_scale = 0.0
+
+func pick_up():
+	var target_pos = pickup_pos.global_position
+	var to_target = target_pos - pickable_obj.global_position
+		
+	pickable_obj.linear_velocity = to_target * 10.0
+
+func drop_item():
+	picking_up = false
+	pickable_obj.gravity_scale = 1.0
+	await get_tree().create_timer(0.2).timeout
+	can_pickup = true
+
 
 func sleep():
 	enter_shop.emit()
@@ -175,9 +200,9 @@ func _input(event: InputEvent) -> void:
 		attack_buffered = false
 	
 	if event.is_action_pressed("pickup") and picking_up:
-		picking_up = false
-		can_pickup = true
-		pickable_obj.gravity_scale = 1.0
+		drop_item()
+
+		
 		
 	if event.is_action_pressed("shop"):
 		if get_tree().paused:
@@ -187,6 +212,7 @@ func _input(event: InputEvent) -> void:
 			enter_shop.emit()
 
 @onready var glock_ray_cast: RayCast3D = $Camera3D/Sway/Idle/Glock/Laser/RayCast3D
+
 
 
 func shoot():
