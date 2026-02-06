@@ -17,6 +17,7 @@ var direction: Vector3 = Vector3()
 var queued_for_delete := false
 
 @onready var body: MeshInstance3D = $Armature/Skeleton3D/Body
+var money_value := 2
 
 signal spawned
 
@@ -24,6 +25,7 @@ func _ready() -> void:
 	await spawned
 	head.set_freeze_mode(RigidBody3D.FREEZE_MODE_KINEMATIC)
 	head.add_to_group("body_part")
+	head.money_value = money_value
 	head.simulate_impact.connect(_simulate_impact)
 	for bone in armature.physical_bone_simulator.get_children():
 		bone.simulate_impact.connect(_simulate_impact)

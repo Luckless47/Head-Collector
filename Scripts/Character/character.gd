@@ -33,9 +33,13 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
+	
+	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-
+	
+	if global_position.y < -7.0:
+		die()
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
@@ -158,7 +162,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		
 		
 		pitch = clamp(pitch , deg_to_rad(-90), deg_to_rad(90))
-
+		
 func _input(event: InputEvent) -> void:
 		
 	if event.is_action_pressed("shoot"):
@@ -223,3 +227,6 @@ func _add_money(amount: int):
 func _remove_money(amount: int):
 	money -= amount
 	money_label.text = "$%d" % money
+	
+func die():
+	enter_shop.emit()

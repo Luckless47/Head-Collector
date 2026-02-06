@@ -5,22 +5,27 @@ extends Control
 @onready var upgrade_info: UpgradeInfo = $UpgradeInfo
 
 ## Not all upgrades implemented yet
-var upgrade_dict: Array = [{"Name": "Faster Firerate I", "Info": "1.0 -> 2.0", "Price": 20},
-							{"Name": "Longer Days I", "Info": "60 -> 70", "Price": 80},
-							{"Name": "More Cash I", "Info": "1x -> 2x", "Price": 100},
-							{"Name": "Faster Spawner I", "Info": "5.0 -> 4.0", "Price": 40},
-							{"Name": "Bigger Grave Radius I", "Info": "0.5 -> 1.0", "Price": 40},
+var upgrade_dict: Array = [{"Name": "Faster Firerate I", "Info": "1.0x -> 2.0x speed", "Price": 20},
+							{"Name": "Longer Days I", "Info": "60 -> 70 seconds", "Price": 80},
+							{"Name": "More Cash I", "Info": "1x -> 2x value", "Price": 30},
+							{"Name": "Faster Spawner I", "Info": "5 -> 4 cooldown in seconds", "Price": 40},
+							{"Name": "Bigger Grave Radius I", "Info": "0.5 -> 1.0 radius", "Price": 40},
 							{"Name": "Bruiser", "Info": "Get a bruiser to help you knock'em up", "Price": 130},]
-@onready var player: CharacterBody3D = $"../../SubViewportContainer/SubViewport/Player"
+var player: CharacterBody3D = null
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_upgrades()
+	game_tree.player_spawned.connect(_on_spawn)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 
+func _on_spawn(new_player):
+	player = new_player
+
+@onready var money_label: Label = $"../MoneyCounter/MoneyLabel"
 
 func set_upgrades():
 	var dict_idx = 0
@@ -41,33 +46,103 @@ func set_upgrades():
 			dict_idx += 1
 		
 
+@onready var game_tree: Node3D = $"../.."
+@onready var hole: CSGCylinder3D = $"../../SubViewportContainer/SubViewport/Enviroment/Ground/Hole"
+@onready var button_sound: AudioStreamPlayer = $ButtonSound
+@onready var error_code: Label = $ErrorCode
+@onready var upgrade_arrows: Control = $UpgradeArrows
+
+@onready var upgrade_sound: AudioStreamPlayer = $UpgradeSound
 
 func _set_visuals(upgrade_button):
 	upgrade_info.set_upgrade_visuals(
 	upgrade_button.upgrade_price, 
 	upgrade_button.upgrade_info,
 	upgrade_button.upgrade_name)
-
+	
+	money_label.text = "$%d" % game_tree.player.money
+	
+var display_arrows := false
 func _check_purchase(upgrade_button):
 	print(player.money, upgrade_button.upgrade_price)
 	if player.money >= upgrade_button.upgrade_price:
-		print("purchase success")
+		display_arrows = true
 		player.remove_money.emit(upgrade_button.upgrade_price)
 		
 		match upgrade_button.upgrade_name:
 			"Faster Firerate I":
 				player.fire_rate = 2.0
 				upgrade_button.upgrade_price = 40
-				upgrade_button.upgrade_info = "2.0 -> 4.0"
+				upgrade_button.upgrade_info = "2.0 -> 4.0 speed"
 				upgrade_button.upgrade_name = "Faster Firerate II"
 			"Faster Firerate II":
 				player.fire_rate = 4.0
 				upgrade_button.upgrade_price = 80
-				upgrade_button.upgrade_info = "4.0 -> 8.0"
+				upgrade_button.upgrade_info = "4.0 -> 8.0 speed"
 				upgrade_button.upgrade_name = "Faster Firerate III"
 			"Faster Firerate III":
 				player.fire_rate = 8.0
-				upgrade_button.disabled = true
+				upgrade_button.upgrade_info = ""
+				upgrade_button.upgrade_name = "Purchased"
+				#upgrade_button.disabled = true
 		
-		_set_visuals(upgrade_button)
+			"Longer Days I":
+				game_tree.day_length = 70.0
+				upgrade_button.upgrade_info = ""
+				upgrade_button.upgrade_name = "Purchased"
+				#upgrade_button.disabled = true
 				
+			"More Cash I":
+				game_tree.money_value *= 2
+				upgrade_button.upgrade_price = 60
+				upgrade_button.upgrade_info = "2x -> 4x value"
+				upgrade_button.upgrade_name = "More Cash II"
+				
+			"More Cash II":
+				game_tree.money_value *= 2
+				#upgrade_button.disabled = true
+				upgrade_button.upgrade_info = ""
+				upgrade_button.upgrade_name = "Purchased"
+				
+			"Faster Spawner I":
+				game_tree.spawn_rate = 4
+				upgrade_button.upgrade_price = 70
+				upgrade_button.upgrade_info = "4 -> 3 cooldown in seconds"
+				upgrade_button.upgrade_name = "Faster Spawner II"
+				
+			"Faster Spawner II":
+				game_tree.spawn_rate = 3
+				#upgrade_button.disabled = true
+				upgrade_button.upgrade_info = ""
+				upgrade_button.upgrade_name = "Purchased"
+				
+			"Bigger Grave Radius I":
+				hole.radius = 1.0
+				#upgrade_button.disabled = true
+				upgrade_button.upgrade_info = ""
+				upgrade_button.upgrade_name = "Purchased"
+				
+			"Purchased":
+				display_arrows = false
+				if !displaying:
+					display_error_code()
+		
+		upgrade_sound.play()
+		_set_visuals(upgrade_button)
+		
+	else:
+		display_arrows = false
+		if !displaying:
+			display_error_code()
+	
+	if display_arrows:
+		upgrade_arrows.spawn(upgrade_button.global_position)
+
+var displaying := false
+	
+func display_error_code():
+	displaying = true
+	error_code.show()
+	await get_tree().create_timer(3.0).timeout
+	displaying = false
+	error_code.hide()

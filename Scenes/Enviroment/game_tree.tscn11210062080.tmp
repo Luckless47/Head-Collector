@@ -684,7 +684,6 @@ scale = Vector2(1.53, 1.53)
 text = "Continue"
 
 [node name="Menu" type="Control" parent="."]
-process_mode = 2
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -739,5 +738,3 @@ volume_db = -15.0
 
 [connection signal="gui_input" from="Shop/Control/ContinueButton" to="Shop" method="_on_continue_button_gui_input"]
 [connection signal="pressed" from="Menu/VBoxContainer/StartButton" to="Menu" method="_on_start_button_pressed"]
-[connection signal="pressed" from="Menu/VBoxContainer/OptionsButton" to="Menu" method="_on_options_button_pressed"]
-[connection signal="pressed" from="Menu/VBoxContainer/ExitButton" to="Menu" method="_on_exit_button_pressed"]
