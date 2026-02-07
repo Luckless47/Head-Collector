@@ -3,14 +3,16 @@ extends Control
 
 @onready var upgrades = self.get_children()
 @onready var upgrade_info: UpgradeInfo = $UpgradeInfo
+@onready var furnace: Node3D = $"../../SubViewportContainer/SubViewport/Enviroment/Furnace"
 
 ## Not all upgrades implemented yet
 var upgrade_dict: Array = [{"Name": "Faster Firerate I", "Info": "1.0x -> 2.0x speed", "Price": 20},
-							{"Name": "Longer Days I", "Info": "60 -> 70 seconds", "Price": 80},
-							{"Name": "More Cash I", "Info": "1x -> 2x value", "Price": 30},
-							{"Name": "Faster Spawner I", "Info": "5 -> 4 cooldown in seconds", "Price": 40},
-							{"Name": "Bigger Grave Radius I", "Info": "0.5 -> 1.0 radius", "Price": 40},
-							{"Name": "Bruiser", "Info": "Get a bruiser to help you knock'em up", "Price": 130},]
+							{"Name": "Longer Days I", "Info": "60 -> 70 seconds", "Price": 60},
+							{"Name": "More Cash I", "Info": "1x -> 2x value", "Price": 15},
+							{"Name": "Faster Spawner I", "Info": "5 -> 4 cooldown in seconds", "Price": 20},
+							{"Name": "Bigger Grave Radius I", "Info": "0.5 -> 1.0 radius", "Price": 10},
+							{"Name": "Scooper", "Info": "Dude who picks up heads for you", "Price": 50},
+							{"Name": "Furnace", "Info": "???", "Price": 30},]
 var player: CharacterBody3D = null
 
 
@@ -72,12 +74,12 @@ func _check_purchase(upgrade_button):
 		match upgrade_button.upgrade_name:
 			"Faster Firerate I":
 				player.fire_rate = 2.0
-				upgrade_button.upgrade_price = 40
+				upgrade_button.upgrade_price = 25
 				upgrade_button.upgrade_info = "2.0 -> 4.0 speed"
 				upgrade_button.upgrade_name = "Faster Firerate II"
 			"Faster Firerate II":
 				player.fire_rate = 4.0
-				upgrade_button.upgrade_price = 80
+				upgrade_button.upgrade_price = 30
 				upgrade_button.upgrade_info = "4.0 -> 8.0 speed"
 				upgrade_button.upgrade_name = "Faster Firerate III"
 			"Faster Firerate III":
@@ -94,7 +96,7 @@ func _check_purchase(upgrade_button):
 				
 			"More Cash I":
 				game_tree.money_value *= 2
-				upgrade_button.upgrade_price = 60
+				upgrade_button.upgrade_price = 30
 				upgrade_button.upgrade_info = "2x -> 4x value"
 				upgrade_button.upgrade_name = "More Cash II"
 				
@@ -106,7 +108,7 @@ func _check_purchase(upgrade_button):
 				
 			"Faster Spawner I":
 				game_tree.spawn_rate = 4
-				upgrade_button.upgrade_price = 70
+				upgrade_button.upgrade_price = 40
 				upgrade_button.upgrade_info = "4 -> 3 cooldown in seconds"
 				upgrade_button.upgrade_name = "Faster Spawner II"
 				
@@ -119,6 +121,12 @@ func _check_purchase(upgrade_button):
 			"Bigger Grave Radius I":
 				hole.radius = 1.0
 				#upgrade_button.disabled = true
+				upgrade_button.upgrade_info = ""
+				upgrade_button.upgrade_name = "Purchased"
+				
+			"Furnace":
+				furnace.process_mode = Node.PROCESS_MODE_INHERIT
+				furnace.show()
 				upgrade_button.upgrade_info = ""
 				upgrade_button.upgrade_name = "Purchased"
 				

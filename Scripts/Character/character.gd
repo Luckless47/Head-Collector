@@ -14,7 +14,7 @@ var footstep_landed
 var pickable_obj: Variant = null
 var can_sleep := false
 
-var money = 0
+var money = 1000
 
 var can_pickup := true
 
@@ -26,6 +26,8 @@ var can_pickup := true
 signal enter_shop
 
 signal remove_money
+
+var current_pick_obj
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -76,24 +78,27 @@ func _physics_process(delta: float) -> void:
 	
 	
 	if ray_cast.is_colliding():
-		pickable_obj = ray_cast.get_collider()
-		pick_up_cursor.show()
 		
-		if pickable_obj is RigidBody3D:
-			rigid_pick_up()
-		
-		elif pickable_obj is PhysicalBone3D:
-			character_pick_up()
+		if !picking_up:
+			pickable_obj = ray_cast.get_collider()
+			pick_up_cursor.show()
 			
-		elif pickable_obj.is_in_group("bed"):
-			if Input.is_action_just_pressed("pickup") and can_sleep:
-				sleep()
+			if pickable_obj:
+				if pickable_obj is RigidBody3D:
+					rigid_pick_up()
+				
+				elif pickable_obj is PhysicalBone3D:
+					character_pick_up()
+					
+				elif pickable_obj.is_in_group("bed"):
+					if Input.is_action_just_pressed("pickup") and can_sleep:
+						sleep()
 			
-		else:
+		elif pick_up_cursor.visible:
 			pick_up_cursor.hide()
 			
 	
-	else:
+	elif pick_up_cursor.visible:
 		pick_up_cursor.hide()
 	
 	
@@ -131,6 +136,7 @@ func pick_up():
 func drop_item():
 	picking_up = false
 	pickable_obj.gravity_scale = 1.0
+	pickable_obj = null
 	await get_tree().create_timer(0.2).timeout
 	can_pickup = true
 
@@ -245,14 +251,23 @@ func shoot():
 func _add_money(amount: int):
 	print("money added")
 	money += amount
-	money_label.text = "$%d" % money
+	money_label.text = "$%d [%.2fx]" % [money, multiplier]
 	var tween = create_tween()
 	tween.tween_property(money_label, "modulate:a", 1.0, 0.5)
 	tween.tween_property(money_label, "modulate:a", 0.0, 1.0).set_delay(3.0)
 
+var multiplier = 1.0
+
 func _remove_money(amount: int):
 	money -= amount
-	money_label.text = "$%d" % money
+	money_label.text = "$%d [%.2fx]" % [money, multiplier]
 	
 func die():
 	enter_shop.emit()
+
+func add_multiplier():
+	multiplier += 0.2
+	money_label.text = "$%d  [%.2fx]" % [money, multiplier]
+	var tween = create_tween()
+	tween.tween_property(money_label, "modulate:a", 1.0, 0.5)
+	tween.tween_property(money_label, "modulate:a", 0.0, 1.0).set_delay(3.0)

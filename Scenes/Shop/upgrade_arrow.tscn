@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ubjd82k75urk"]
 
-[ext_resource type="Texture2D" uid="uid://bnp6byh5ji8nw" path="res://arrow.png" id="1_dkyrs"]
+[ext_resource type="Texture2D" uid="uid://bnp6byh5ji8nw" path="res://textures/arrow.png" id="1_dkyrs"]
 
 [node name="UpgradeArrow" type="TextureRect"]
 offset_left = -3.9999995

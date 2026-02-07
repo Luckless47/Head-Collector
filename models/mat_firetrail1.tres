@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://buq12rxemvbkf"]
 
-[ext_resource type="Shader" path="res://trail_shader.tres" id="1_2sv3c"]
+[ext_resource type="Shader" uid="uid://dvr1qobayc681" path="res://shaders/trail_shader.tres" id="1_2sv3c"]
 
 [resource]
 render_priority = 0

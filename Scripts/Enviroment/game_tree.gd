@@ -8,7 +8,7 @@ var spawn_rate := 5
 
 @onready var spot_light: SpotLight3D = $SubViewportContainer/SubViewport/SpotLight
 
-@onready var money_label: Label = $Shop/MoneyCounter/MoneyLabel
+@onready var shop_money_label: Label = $Shop/MoneyCounter/MoneyLabel
 
 
 @onready var world_environment: WorldEnvironment = $SubViewportContainer/SubViewport/WorldEnvironment
@@ -30,7 +30,7 @@ const ENEMY_POOL = preload("uid://1a8km6ncqc77")
 @onready var sub_viewport: SubViewport = $SubViewportContainer/SubViewport
 
 var player: CharacterBody3D = null
-signal player_spawned
+signal player_spawned(player)
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_tree().paused = true
@@ -63,13 +63,15 @@ func _enter_shop():
 	player.ray_cast.enabled = false
 	player.process_mode = Node.PROCESS_MODE_INHERIT
 	player.money_label.modulate.a = 0.0
-	money_label.text = "$%d" % player.money
+	player.money = roundi(float(player.money) * player.multiplier)
+	shop_money_label.text = "$%d" % player.money
 	
 	shop.show()
 	vhs_effect.show()
 	
 func day_loop():
 	player.global_position = player_spawn_pos.global_position
+	player.multiplier = 1.0
 	for enemy in enemy_pool.get_children():
 		if enemy is CharacterBody3D:
 			enemy.call_deferred("queue_free")

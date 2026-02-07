@@ -1,12 +1,12 @@
 [gd_scene load_steps=35 format=4 uid="uid://ctp0o18g7yp8p"]
 
 [ext_resource type="Script" uid="uid://d0442iju4qs1e" path="res://scripts/Weapon/bullet.gd" id="1_v7oki"]
-[ext_resource type="Shader" uid="uid://df2b6ryce5jk3" path="res://fireball_shader.tres" id="2_2gcbq"]
-[ext_resource type="ArrayMesh" uid="uid://bn26vpkntaj4r" path="res://fireball_mesh.obj" id="3_kr3r1"]
-[ext_resource type="Texture2D" uid="uid://c60rw6sms4qwa" path="res://T_VFX_basic1.PNG" id="4_3k0in"]
-[ext_resource type="Material" uid="uid://buq12rxemvbkf" path="res://mat_firetrail1.tres" id="5_pdrqg"]
-[ext_resource type="Script" uid="uid://8wgwnkboixte" path="res://Trail3D.gd" id="6_wne62"]
-[ext_resource type="Material" uid="uid://c8sdulr7c4vl8" path="res://fireball_firetrail_particles_process.tres" id="8_xnuwg"]
+[ext_resource type="Shader" uid="uid://df2b6ryce5jk3" path="res://shaders/fireball_shader.tres" id="2_2gcbq"]
+[ext_resource type="ArrayMesh" uid="uid://bn26vpkntaj4r" path="res://models/fireball_mesh.obj" id="3_kr3r1"]
+[ext_resource type="Texture2D" uid="uid://c60rw6sms4qwa" path="res://textures/T_VFX_basic1.PNG" id="4_3k0in"]
+[ext_resource type="Material" uid="uid://buq12rxemvbkf" path="res://models/mat_firetrail1.tres" id="5_pdrqg"]
+[ext_resource type="Script" uid="uid://8wgwnkboixte" path="res://scripts/Trail3D.gd" id="6_wne62"]
+[ext_resource type="Material" uid="uid://c8sdulr7c4vl8" path="res://shaders/fireball_firetrail_particles_process.tres" id="8_xnuwg"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2gcbq"]
 radius = 0.084472656
