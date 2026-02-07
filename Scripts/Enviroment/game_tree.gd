@@ -1,10 +1,11 @@
 extends Node3D
 
 
-var day_length := 60
+var day_length := 5
 var money_value := 2
 var spawn_rate := 5
 
+@onready var screen: MeshInstance3D = $SubViewportContainer/SubViewport/Bed/computer/Desk/Computer/Screen
 
 @onready var spot_light: SpotLight3D = $SubViewportContainer/SubViewport/SpotLight
 
@@ -58,11 +59,14 @@ func _start():
 	
 	day_loop()
 
+@onready var crt_startup: AudioStreamPlayer = $Shop/Upgrades/CRT_Startup
+
+@onready var background: Control = $Shop/Background
+
 
 func _enter_shop():
 	if !get_tree().paused:
 		get_tree().paused = true
-		
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 	player.ray_cast.enabled = false
 	player.process_mode = Node.PROCESS_MODE_INHERIT
@@ -70,8 +74,13 @@ func _enter_shop():
 	player.money = roundi(float(player.money) * player.multiplier)
 	shop_money_label.text = "$%d" % player.money
 	
-	shop.show()
 	vhs_effect.show()
+	
+	shop.do_start_animation()
+	
+	#await get_tree().create_timer(2).timeout
+	#night_music.play()
+	
 	
 func day_loop():
 	player.global_position = player_spawn_pos.global_position
@@ -114,6 +123,9 @@ func day_loop():
 	
 	await get_tree().create_timer(day_length).timeout
 	player.flash_light.light_energy = 0.1
+	var material: StandardMaterial3D = screen.mesh.surface_get_material(0)
+	material.emission_enabled = true
+	screen.mesh.surface_set_material(0, material)
 	world_environment.environment.background_energy_multiplier = 0.0
 	spot_light.light_energy = 1.0
 	player.can_sleep = true
@@ -127,7 +139,15 @@ func _exit_shop():
 	spot_light.light_energy = 0.0
 	player.flash_light.light_energy = 0.0
 	world_environment.environment.background_energy_multiplier = 1.0
+	
+	var material: StandardMaterial3D = screen.mesh.surface_get_material(0)
+	material.emission_enabled = false
+	screen.mesh.surface_set_material(0, material)
+	
+	
 	player.can_sleep = false
-	vhs_effect.hide()
-	shop.hide()
+	
+	
+	shop.do_stop_animation()
+	
 	day_loop()

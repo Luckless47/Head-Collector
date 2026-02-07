@@ -14,7 +14,7 @@ var footstep_landed
 var pickable_obj: Variant = null
 var can_sleep := false
 
-var money = 1000
+var money = 0
 
 var can_pickup := true
 
