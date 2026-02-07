@@ -10,6 +10,7 @@ var spawn_rate := 5
 
 @onready var shop_money_label: Label = $Shop/MoneyCounter/MoneyLabel
 
+const SCOOPER = preload("uid://b8d2cnopd8pma")
 
 @onready var world_environment: WorldEnvironment = $SubViewportContainer/SubViewport/WorldEnvironment
 
@@ -21,6 +22,7 @@ var player_money_label
 var player_projectiles
 @onready var enemy_pool: Node3D = $SubViewportContainer/SubViewport/EnemyPool
 @onready var player_spawn_pos: Marker3D = $SubViewportContainer/SubViewport/PlayerSpawnPos
+@onready var scooper_pool: Node3D = $SubViewportContainer/SubViewport/ScooperPool
 
 const PLAYER = preload("uid://de7udajy6v357")
 const ENEMY_POOL = preload("uid://1a8km6ncqc77")
@@ -31,6 +33,8 @@ const ENEMY_POOL = preload("uid://1a8km6ncqc77")
 
 var player: CharacterBody3D = null
 signal player_spawned(player)
+signal scooper_spawned(scooper)
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_tree().paused = true
@@ -72,9 +76,14 @@ func _enter_shop():
 func day_loop():
 	player.global_position = player_spawn_pos.global_position
 	player.multiplier = 1.0
+	var scooper_count = scooper_pool.get_child_count()
+	
 	for enemy in enemy_pool.get_children():
 		if enemy is CharacterBody3D:
 			enemy.call_deferred("queue_free")
+			
+	for scooper in scooper_pool.get_children():
+		scooper.queue_free()
 			
 
 	for projectile in player_projectiles.get_children():
@@ -82,6 +91,14 @@ func day_loop():
 			projectile.queue_free()
 	
 	
+	for i in range(scooper_count):
+		var scooper = SCOOPER.instantiate()
+		scooper_pool.add_child(scooper)
+		
+		scooper.global_position = scooper_pool.global_position
+		scooper_spawned.emit(scooper)
+		
+		
 	enemy_pool.queue_free()
 	enemy_pool = ENEMY_POOL.instantiate()
 	add_child(enemy_pool)

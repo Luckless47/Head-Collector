@@ -1,4 +1,4 @@
-[gd_scene load_steps=78 format=4 uid="uid://bj06nrcgy67ah"]
+[gd_scene load_steps=77 format=4 uid="uid://bj06nrcgy67ah"]
 
 [ext_resource type="Texture2D" uid="uid://crakmcvjy1jrl" path="res://textures/Enviroment/grass.png" id="1_bcih5"]
 [ext_resource type="Script" uid="uid://drfmo4v8sm633" path="res://scripts/Enviroment/game_tree.gd" id="1_i0w1p"]
@@ -9,7 +9,6 @@
 [ext_resource type="AudioStream" uid="uid://ctcoh3jxodra0" path="res://sounds/freesound_community-lighting-a-fire-14421.mp3" id="6_qpddp"]
 [ext_resource type="Texture2D" uid="uid://dp33pjwvc8qdc" path="res://textures/1fe437ed0169800342962932aca4348f.svg" id="9_akt4c"]
 [ext_resource type="Script" uid="uid://coi6o8m1wtfde" path="res://scripts/Enviroment/wall.gd" id="9_s6efi"]
-[ext_resource type="Script" uid="uid://5vrrykivutn5" path="res://scenes/Enviroment/scooper_pool.gd" id="10_t3b42"]
 [ext_resource type="Script" uid="uid://b02r4r6wbvjoo" path="res://scripts/Shop/upgrades.gd" id="11_dqico"]
 [ext_resource type="Script" uid="uid://dx067kwvcvrn8" path="res://scripts/Shop/upgrade_info.gd" id="12_dqico"]
 [ext_resource type="Script" uid="uid://dca4ukyix28we" path="res://scripts/Shop/shop.gd" id="13_dqico"]
@@ -528,10 +527,10 @@ metadata/_edit_use_anchors_ = true
 script = ExtResource("3_akt4c")
 
 [node name="HolePos" type="Marker3D" parent="SubViewportContainer/SubViewport/Enviroment"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55382764, 0.68761545, -6.2351956)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5027943, 0.68761545, -5.6760054)
 
 [node name="HoleDirection" type="Marker3D" parent="SubViewportContainer/SubViewport/Enviroment"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5534548, 0.68761545, -6.2559624)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52608836, 0.68761545, -6.2421956)
 
 [node name="Ground" type="CSGBox3D" parent="SubViewportContainer/SubViewport/Enviroment"]
 transform = Transform3D(1.0001733, 0, 0, 0, 0.656304, 0, 0, 0, 1.0001733, 1.0656755, -4.022499, 0.18994915)
@@ -712,10 +711,6 @@ script = ExtResource("9_s6efi")
 
 [node name="EnemyPool" parent="SubViewportContainer/SubViewport" instance=ExtResource("14_gm5em")]
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0.7695395, 1.4212388, 3.1039925)
-
-[node name="ScooperPool" type="Node3D" parent="SubViewportContainer/SubViewport"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4736433, 0.7307211, 4.4925394)
-script = ExtResource("10_t3b42")
 
 [node name="Bed" type="StaticBody3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7106113, 1.1301616, 7.801743)

@@ -4,6 +4,7 @@ extends Control
 @onready var upgrades = self.get_children()
 @onready var upgrade_info: UpgradeInfo = $UpgradeInfo
 @onready var furnace: Node3D = $"../../SubViewportContainer/SubViewport/Enviroment/Furnace"
+const SCOOPER = preload("uid://b8d2cnopd8pma")
 
 ## Not all upgrades implemented yet
 var upgrade_dict: Array = [{"Name": "Faster Firerate I", "Info": "1.0x -> 2.0x speed", "Price": 20},
@@ -14,7 +15,6 @@ var upgrade_dict: Array = [{"Name": "Faster Firerate I", "Info": "1.0x -> 2.0x s
 							{"Name": "Scooper", "Info": "Dude who picks up heads for you", "Price": 50},
 							{"Name": "Furnace", "Info": "???", "Price": 30},]
 var player: CharacterBody3D = null
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -127,6 +127,14 @@ func _check_purchase(upgrade_button):
 			"Furnace":
 				furnace.process_mode = Node.PROCESS_MODE_INHERIT
 				furnace.show()
+				upgrade_button.upgrade_info = ""
+				upgrade_button.upgrade_name = "Purchased"
+			
+			"Scooper":
+				var scooper = SCOOPER.instantiate()
+				game_tree.scooper_pool.add_child(scooper)
+				scooper.global_position = game_tree.scooper_pool.global_position
+				game_tree.scooper_spawned.emit(scooper)
 				upgrade_button.upgrade_info = ""
 				upgrade_button.upgrade_name = "Purchased"
 				

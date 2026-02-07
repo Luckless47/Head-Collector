@@ -2,6 +2,7 @@ extends RigidBody3D
 
 
 signal add_money
+var can_pickup := false
 
 var money_value := 2
 

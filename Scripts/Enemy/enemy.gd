@@ -100,6 +100,7 @@ func _simulate_impact(projectile_pos, bone):
 	if head:
 		head.freeze = false
 		head.top_level = true
+		head.can_pickup = true
 	
 	
 	await get_tree().process_frame
@@ -121,6 +122,7 @@ func _hole_trip():
 	if head:
 		head.freeze = false
 		head.top_level = true
+		head.can_pickup = true
 		
 	if !armature.physical_bone_simulator.is_simulating_physics():
 		armature.physical_bone_simulator.physical_bones_start_simulation()
