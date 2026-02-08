@@ -21,20 +21,20 @@ func spawn_loop():
 	if enemy:
 		enemy.scale = Vector3(0.1, 0.1, 0.1)
 		enemy.global_position = enemy_spawn_pos.global_position
+		print(money_value)
+		enemy.money_value = money_value
+		enemy.player = player
 		var tween = create_tween()
 		#tween.set_parallel(true)
 		tween.tween_property(enemy, "scale", Vector3(1.0, 1.0, 1.0), spawn_rate)
 		#tween.tween_property(enemy, "head:scale", Vector3(1.0, 1.0, 1.0), spawn_rate)
 		await tween.finished
 		if enemy:
-			if !enemy.head.add_money.is_connected(player._add_money):
-				enemy.head.add_money.connect(player._add_money)
-				
 			enemy.spawned.emit()
-			enemy.money_value = money_value
 		await get_tree().create_timer(0.1).timeout
 	if can_spawn:
 		spawn_loop()
+
 
 
 	

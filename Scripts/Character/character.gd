@@ -14,7 +14,8 @@ var footstep_landed
 var pickable_obj: Variant = null
 var can_sleep := false
 
-var money = 1000
+@export var money = 0
+@export var earned_money= 0
 
 var can_pickup := true
 
@@ -29,6 +30,8 @@ signal remove_money
 
 var current_pick_obj
 
+var alive = true
+
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	remove_money.connect(_remove_money)
@@ -40,7 +43,7 @@ func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	
-	if global_position.y < -7.0:
+	if global_position.y < -7.0 and alive:
 		die()
 	# Handle jump.
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
@@ -91,6 +94,7 @@ func _physics_process(delta: float) -> void:
 					character_pick_up()
 					
 				elif pickable_obj.is_in_group("bed"):
+					pickable_obj = null
 					if Input.is_action_just_pressed("pickup") and can_sleep:
 						sleep()
 			
@@ -104,6 +108,8 @@ func _physics_process(delta: float) -> void:
 	
 	if picking_up and pickable_obj:
 		pick_up()
+	else:
+		drop_item()
 		
 	
 
@@ -137,9 +143,10 @@ func pick_up():
 func drop_item():
 	
 	picking_up = false
-	pickable_obj.gravity_scale = 1.0
+	if pickable_obj:
+		pickable_obj.gravity_scale = 1.0
 	pickable_obj = null
-	await get_tree().create_timer(0.2).timeout
+	await get_tree().create_timer(0.5).timeout
 	can_pickup = true
 
 
@@ -207,7 +214,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_released("shoot"):
 		attack_buffered = false
 	
-	if event.is_action_pressed("pickup") and picking_up and pickable_obj:
+	if event.is_action_pressed("drop"):
 		drop_item()
 		
 	if event.is_action_pressed("esc"):
@@ -275,6 +282,7 @@ func _remove_money(amount: int):
 	money_label.text = "$%d [%.2fx]" % [money, multiplier]
 	
 func die():
+	alive = false
 	enter_shop.emit()
 
 func add_multiplier():

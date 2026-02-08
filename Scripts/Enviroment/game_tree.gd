@@ -1,7 +1,7 @@
 extends Node3D
 
 
-var day_length := 2
+@export var day_length := 40
 var money_value := 2
 var spawn_rate := 5
 
@@ -37,11 +37,18 @@ var player: CharacterBody3D = null
 signal player_spawned(player)
 signal scooper_spawned(scooper)
 
+signal increase_multiplier
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	get_tree().paused = true
 	menu.start_pressed.connect(_start)
+	increase_multiplier.connect(_increase_multiplier)
 	
+
+
+func _increase_multiplier():
+	player.add_multiplier()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _start():
@@ -72,6 +79,7 @@ func _enter_shop():
 	player.ray_cast.enabled = false
 	player.process_mode = Node.PROCESS_MODE_INHERIT
 	player.money_label.modulate.a = 0.0
+	#print(player.money, "multi", player.multiplier)
 	player.money = roundi(float(player.money) * player.multiplier)
 	shop_money_label.text = "$%d" % player.money
 	
@@ -86,6 +94,7 @@ func _enter_shop():
 func day_loop():
 	player.global_position = player_spawn_pos.global_position
 	player.multiplier = 1.0
+	player.alive = true
 	var scooper_count = scooper_pool.get_child_count()
 	
 	for enemy in enemy_pool.get_children():
@@ -131,6 +140,7 @@ func day_loop():
 	spot_light.light_energy = 1.0
 	player.can_sleep = true
 	player.can_pickup = false
+	player.picking_up = false
 	get_tree().paused = true
 
 func _exit_shop():

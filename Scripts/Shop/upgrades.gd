@@ -82,8 +82,11 @@ func _check_purchase(upgrade_button):
 	if player.money >= upgrade_button.upgrade_price:
 		display_arrows = true
 		
+		if upgrade_button.upgrade_name != "Purchased":
+			player.remove_money.emit(upgrade_button.upgrade_price)
 		
 		match upgrade_button.upgrade_name:
+			
 			"Faster Firerate I":
 				player.fire_rate = 2.0
 				upgrade_button.upgrade_price = 25
@@ -107,13 +110,13 @@ func _check_purchase(upgrade_button):
 				#upgrade_button.disabled = true
 				
 			"More Cash I":
-				game_tree.money_value *= 2
+				game_tree.money_value = 4
 				upgrade_button.upgrade_price = 30
 				upgrade_button.upgrade_info = "2x -> 4x value"
 				upgrade_button.upgrade_name = "More Cash II"
 				
 			"More Cash II":
-				game_tree.money_value *= 2
+				game_tree.money_value = 8
 				#upgrade_button.disabled = true
 				upgrade_button.upgrade_info = ""
 				upgrade_button.upgrade_name = "Purchased"
@@ -185,9 +188,11 @@ func _check_purchase(upgrade_button):
 				if !displaying:
 					display_error_code()
 				
+				
+				
 				return
 		
-		player.remove_money.emit(upgrade_button.upgrade_price)
+		
 		upgrade_sound.play()
 		_set_visuals(upgrade_button)
 		

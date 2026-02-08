@@ -14,15 +14,17 @@ var direction: Vector3 = Vector3()
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var footstep_audio: AudioStreamPlayer3D = $FootstepAudio
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
+var player = null
 
 var queued_for_delete := false
 
 @onready var body: MeshInstance3D = $Armature/Skeleton3D/Body
-var money_value := 2
+var money_value = 2
 
 var gravity_enabled := true
 
 signal spawned
+signal finished_setting
 
 signal hole_trip
 
@@ -31,17 +33,17 @@ func _ready() -> void:
 	head.set_freeze_mode(RigidBody3D.FREEZE_MODE_KINEMATIC)
 	head.add_to_group("body_part")
 	add_to_group("body_part")
-	head.money_value = money_value
 	head.simulate_impact.connect(_simulate_impact)
 	for bone in armature.physical_bone_simulator.get_children():
 		bone.simulate_impact.connect(_simulate_impact)
-		
+	
+	head.add_money.connect(_add_money)
 	hole_trip.connect(_hole_trip)
+	finished_setting.emit(self)
 	
 	start_walk_loop()
 
 func _physics_process(delta: float) -> void:
-	
 	# Add the gravity.
 	if not is_on_floor() and gravity_enabled:
 		velocity += get_gravity() * delta
@@ -102,7 +104,7 @@ func _simulate_impact(projectile_pos, bone):
 		head.top_level = true
 		head.can_pickup = true
 	
-	
+
 	await get_tree().process_frame
 	
 	#var throw_direction = projectile_pos.direction_to(head.global_position)
@@ -125,3 +127,7 @@ func _hole_trip():
 		
 	if !armature.physical_bone_simulator.is_simulating_physics():
 		armature.physical_bone_simulator.physical_bones_start_simulation()
+
+
+func _add_money():
+	player._add_money(money_value)

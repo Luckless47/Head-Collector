@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://d1nm3jquvgrb6"]
 
-[ext_resource type="Shader" uid="uid://ch7t1kpm145xx" path="res://Addons/effects/fireball/materials/fireball_shell.gdshader" id="1_1r56w"]
+[ext_resource type="Shader" uid="uid://csex7nm7a4t1s" path="res://models/fireball_shell.gdshader" id="1_1r56w"]
 
 [resource]
 resource_local_to_scene = true
