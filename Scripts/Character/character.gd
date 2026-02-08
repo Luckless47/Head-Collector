@@ -14,7 +14,7 @@ var footstep_landed
 var pickable_obj: Variant = null
 var can_sleep := false
 
-var money = 0
+var money = 1000
 
 var can_pickup := true
 
@@ -106,7 +106,8 @@ func _physics_process(delta: float) -> void:
 		pick_up()
 		
 	
-			
+
+var pause := false
 		
 	
 var picking_up = false
@@ -134,6 +135,7 @@ func pick_up():
 	pickable_obj.linear_velocity = to_target * 10.0
 
 func drop_item():
+	
 	picking_up = false
 	pickable_obj.gravity_scale = 1.0
 	pickable_obj = null
@@ -205,17 +207,27 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_released("shoot"):
 		attack_buffered = false
 	
-	if event.is_action_pressed("pickup") and picking_up:
+	if event.is_action_pressed("pickup") and picking_up and pickable_obj:
 		drop_item()
+		
+	if event.is_action_pressed("esc"):
+		if not pause:
+			pause = true
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		else:
+			pause = false
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+
 
 		
 		
-	if event.is_action_pressed("shop"):
-		if get_tree().paused:
-			get_tree().paused = false
-		else:
-			get_tree().paused = true
-			enter_shop.emit()
+	#if event.is_action_pressed("shop"):
+		#if get_tree().paused:
+			#get_tree().paused = false
+		#else:
+			#get_tree().paused = true
+			#enter_shop.emit()
 
 @onready var glock_ray_cast: RayCast3D = $Camera3D/Sway/Idle/Glock/Laser/RayCast3D
 

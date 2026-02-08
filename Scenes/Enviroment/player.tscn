@@ -19,7 +19,7 @@ stream_2/stream = ExtResource("4_2ja87")
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4qi76"]
 radius = 0.16357422
-height = 2.2929688
+height = 1.8817749
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mfwdf"]
 albedo_color = Color(0, 0, 0, 1)
@@ -160,6 +160,8 @@ shadow_color = Color(0, 1, 0, 1)
 
 [node name="Player" type="CharacterBody3D"]
 process_mode = 3
+collision_layer = 2
+collision_mask = 3
 input_ray_pickable = false
 script = ExtResource("1_82kh2")
 headbob_frequency = 3.0
@@ -178,7 +180,7 @@ visible = false
 mesh = SubResource("CapsuleMesh_4qi76")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.14648438, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3520813, 0)
 shape = SubResource("CapsuleShape3D_4qi76")
 debug_color = Color(0.014246029, 0.65817213, 0.6383887, 0.47500002)
 

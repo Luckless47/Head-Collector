@@ -1,7 +1,7 @@
 extends Node3D
 
 
-var day_length := 5
+var day_length := 2
 var money_value := 2
 var spawn_rate := 5
 
@@ -16,6 +16,7 @@ const SCOOPER = preload("uid://b8d2cnopd8pma")
 @onready var world_environment: WorldEnvironment = $SubViewportContainer/SubViewport/WorldEnvironment
 
 @onready var shop: Control = $Shop
+
 
 @onready var area_trip: Area3D = $SubViewportContainer/SubViewport/Enviroment/Ground/Hole/AreaTrip
 
@@ -104,7 +105,7 @@ func day_loop():
 		var scooper = SCOOPER.instantiate()
 		scooper_pool.add_child(scooper)
 		
-		scooper.global_position = scooper_pool.global_position
+		scooper.global_position = scooper_pool.global_position + Vector3(0, 0, 2*i)
 		scooper_spawned.emit(scooper)
 		
 		

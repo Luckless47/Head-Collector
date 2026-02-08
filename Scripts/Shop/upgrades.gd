@@ -5,20 +5,26 @@ extends Control
 @onready var upgrade_info: UpgradeInfo = $UpgradeInfo
 @onready var furnace: Node3D = $"../../SubViewportContainer/SubViewport/Enviroment/Furnace"
 const SCOOPER = preload("uid://b8d2cnopd8pma")
+@onready var game_finished: Label = $GameFinished
+
 
 ## Not all upgrades implemented yet
 var upgrade_dict: Array = [{"Name": "Faster Firerate I", "Info": "1.0x -> 2.0x speed", "Price": 20},
-							{"Name": "Longer Days I", "Info": "60 -> 70 seconds", "Price": 60},
+							{"Name": "Longer Days I", "Info": "40 -> 60 seconds", "Price": 60},
 							{"Name": "More Cash I", "Info": "1x -> 2x value", "Price": 15},
 							{"Name": "Faster Spawner I", "Info": "5 -> 4 cooldown in seconds", "Price": 20},
 							{"Name": "Bigger Grave Radius I", "Info": "0.5 -> 1.0 radius", "Price": 10},
-							{"Name": "Scooper", "Info": "Dude who picks up heads for you", "Price": 50},
-							{"Name": "Furnace", "Info": "???", "Price": 30},]
+							{"Name": "Head Collector I", "Info": "Dude who picks up heads for you", "Price": 15},
+							{"Name": "Furnace", "Info": "???", "Price": 30},
+							{"Name": "Secret", "Info": "What could it be?", "Price": 1000}]
 var player: CharacterBody3D = null
+
+signal game_over
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	set_upgrades()
+	game_over.connect(_game_over)
 	game_tree.player_spawned.connect(_on_spawn)
 
 
@@ -28,6 +34,11 @@ func _on_spawn(new_player):
 	player = new_player
 
 @onready var money_label: Label = $"../MoneyCounter/MoneyLabel"
+
+func _game_over():
+	game_finished.show()
+	await get_tree().create_timer(5.0).timeout
+	game_finished.hide()
 
 func set_upgrades():
 	var dict_idx = 0
@@ -53,6 +64,7 @@ func set_upgrades():
 @onready var button_sound: AudioStreamPlayer = $ButtonSound
 @onready var error_code: Label = $ErrorCode
 @onready var upgrade_arrows: Control = $UpgradeArrows
+@onready var door: CSGBox3D = $"../../SubViewportContainer/SubViewport/Enviroment/Wall4/Door"
 
 @onready var upgrade_sound: AudioStreamPlayer = $UpgradeSound
 
@@ -69,7 +81,7 @@ func _check_purchase(upgrade_button):
 	print(player.money, upgrade_button.upgrade_price)
 	if player.money >= upgrade_button.upgrade_price:
 		display_arrows = true
-		player.remove_money.emit(upgrade_button.upgrade_price)
+		
 		
 		match upgrade_button.upgrade_name:
 			"Faster Firerate I":
@@ -114,35 +126,68 @@ func _check_purchase(upgrade_button):
 				
 			"Faster Spawner II":
 				game_tree.spawn_rate = 3
+				upgrade_button.upgrade_price = 40
+				upgrade_button.upgrade_info = "3 -> 2 cooldown in seconds"
+				upgrade_button.upgrade_name = "Faster Spawner III"
+				
+			"Faster Spawner III":
+				game_tree.spawn_rate = 2
 				#upgrade_button.disabled = true
 				upgrade_button.upgrade_info = ""
 				upgrade_button.upgrade_name = "Purchased"
 				
 			"Bigger Grave Radius I":
 				hole.radius = 1.0
-				#upgrade_button.disabled = true
+				upgrade_button.disabled = true
 				upgrade_button.upgrade_info = ""
 				upgrade_button.upgrade_name = "Purchased"
 				
 			"Furnace":
 				furnace.process_mode = Node.PROCESS_MODE_INHERIT
 				furnace.show()
+				upgrade_button.disabled = true
 				upgrade_button.upgrade_info = ""
 				upgrade_button.upgrade_name = "Purchased"
 			
-			"Scooper":
+			"Head Collector I":
+				var scooper = SCOOPER.instantiate()
+				game_tree.scooper_pool.add_child(scooper)
+				scooper.global_position = game_tree.scooper_pool.global_position
+				game_tree.scooper_spawned.emit(scooper)
+				upgrade_button.upgrade_price = 40
+				upgrade_button.upgrade_name = "Head Collector II"
+				
+			"Head Collector II":
+				var scooper = SCOOPER.instantiate()
+				game_tree.scooper_pool.add_child(scooper)
+				scooper.global_position = game_tree.scooper_pool.global_position
+				game_tree.scooper_spawned.emit(scooper)
+				upgrade_button.upgrade_price = 60
+				upgrade_button.upgrade_name = "Head Collector III"
+			
+			"Head Collector III":
 				var scooper = SCOOPER.instantiate()
 				game_tree.scooper_pool.add_child(scooper)
 				scooper.global_position = game_tree.scooper_pool.global_position
 				game_tree.scooper_spawned.emit(scooper)
 				upgrade_button.upgrade_info = ""
 				upgrade_button.upgrade_name = "Purchased"
+			
+			"Secret":
+				upgrade_button.disabled = true
+				door.show()
+				upgrade_button.upgrade_info = ""
+				upgrade_button.upgrade_name = "Purchased"
 				
 			"Purchased":
 				display_arrows = false
+				
 				if !displaying:
 					display_error_code()
+				
+				return
 		
+		player.remove_money.emit(upgrade_button.upgrade_price)
 		upgrade_sound.play()
 		_set_visuals(upgrade_button)
 		

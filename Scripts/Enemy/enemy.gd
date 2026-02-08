@@ -108,7 +108,6 @@ func _simulate_impact(projectile_pos, bone):
 	#var throw_direction = projectile_pos.direction_to(head.global_position)
 	
 	
-	#collision_shape.disabled = false
 	armature.physical_bone_simulator.physical_bones_start_simulation()
 	
 	if bone:
@@ -126,4 +125,3 @@ func _hole_trip():
 		
 	if !armature.physical_bone_simulator.is_simulating_physics():
 		armature.physical_bone_simulator.physical_bones_start_simulation()
-		

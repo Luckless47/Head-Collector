@@ -13,7 +13,9 @@ var hole_direction: Marker3D = null
 
 var nearest_head: RigidBody3D = null
 var nearby_heads: Array[RigidBody3D] = []
+
 # Called when the node enters the scene tree for the first time.
+@onready var animation_player: AnimationPlayer = $BeanRoot/AnimationPlayer
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -26,7 +28,10 @@ func _physics_process(delta: float) -> void:
 	
 	
 	if nearest_head == null:
+		velocity = Vector3.ZERO
 		find_head = true
+		look_at(hole_pos.global_position)
+		
 		
 	if find_head:
 		find_nearest_head()
@@ -44,16 +49,18 @@ func _physics_process(delta: float) -> void:
 		
 
 func check():
-	await get_tree().create_timer(2.0).timeout
+	await get_tree().create_timer(2.5).timeout
 	if nearest_head:
 		pick_up = true
 		nearest_head.gravity_scale = 0.0
+	else:
+		animation_player.stop()
 
 func find_nearest_head():
 	if !nearby_heads.is_empty():
 		for head in nearby_heads:
 			if !head.can_pickup:
-				return
+				continue
 			
 			var current_head_distance = global_position.distance_to(head.global_position)
 			
@@ -71,29 +78,35 @@ func find_nearest_head():
 	
 
 func path_to_head():
-	look_at(nearest_head.global_position, Vector3.UP, true)
-	
-	var direction = global_position.direction_to(nearest_head.global_position)
-	var distance = global_position.distance_to(nearest_head.global_position)
-	
-	var desired_velocity = direction * 2.0
-	#var force = (desired_velocity - linear_velocity) * 10.0
-	#apply_central_force(force)
-	velocity.x = desired_velocity.x
-	velocity.z = desired_velocity.z
+	if nearest_head.can_pickup:
+		look_at(nearest_head.global_position, Vector3.UP, true)
+		
+		var direction = global_position.direction_to(nearest_head.global_position)
+		var distance = global_position.distance_to(nearest_head.global_position)
+		
+		var desired_velocity = direction * 2.0
+		#var force = (desired_velocity - linear_velocity) * 10.0
+		#apply_central_force(force)
+		velocity.x = desired_velocity.x
+		velocity.z = desired_velocity.z
 	
 	
 	#print(distance)
-	if distance < 1.0:
-		pathfind = false
-		nearest_head.gravity_scale = 0.0
-		pick_up = true
-		
-		velocity = Vector3.ZERO
+		if distance < 1.0:
+			pathfind = false
+			nearest_head.gravity_scale = 0.0
+			pick_up = true
+			nearest_head.can_pickup = false
+			
+			velocity = Vector3.ZERO
+	
+	else:
+		animation_player.stop()
+		nearest_head = null
 		
 
-func pick_up_head():
- 
+func pick_up_head(): 
+
 	var target_pos = item_pos.global_position
 	var to_target = target_pos - nearest_head.global_position
 	
